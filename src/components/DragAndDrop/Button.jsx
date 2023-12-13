@@ -61,9 +61,6 @@ export const Button = ({ buttonProps, isSelected, onSelect, onChange }) => {
                 <Transformer
                     ref={trRef}
                     rotateEnabled={true}
-                    anchorSize={7}
-                    borderStrokeWidth={1.5}
-                    borderStroke="black"
                     keepRatio={true}
                 />
             )}

@@ -14,9 +14,11 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
+    "konva": "^9.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-konva": "^18.2.10"
+    "react-konva": "^18.2.10",
+    "react-konva-utils": "^1.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
