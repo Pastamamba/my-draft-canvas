@@ -52,7 +52,7 @@ export const DragAndDrop = () => {
                 dragHandleRef.current.removeEventListener('mousedown', handleMouseDown);
             }
         };
-    }, []);
+    }, [handleMouseDown]);
 
     return (
         <div style={{ display: 'flex' }}>
@@ -66,7 +66,7 @@ export const DragAndDrop = () => {
                     <IconButton onClick={toggleDrawer} style={{ position: 'absolute', top: 0, right: 0 }}>
                         <ChevronLeftIcon />
                     </IconButton>
-                    <Box sx={{ overflow: 'auto', paddingTop: '48px' }}> {/* Ota huomioon ChevronLeftIconin korkeus */}
+                    <Box sx={{ overflow: 'auto', paddingTop: '48px' }}>
                         <Typography
                             sx={{
                                 padding: "1em",
@@ -126,7 +126,9 @@ export const DragAndDrop = () => {
                     </IconButton>
                 </div>
             )}
+            <div style={{margin: "30px"}}>
             <CanvasComponent />
+            </div>
         </div>
     );
 };

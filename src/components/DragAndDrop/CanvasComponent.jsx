@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Layer, Stage } from 'react-konva';
 import { TextBox } from './TextBox';
-import { Button } from './Button'; // Tämä on uusi komponentti
+import { Button } from './Button';
 
 export const CanvasComponent = () => {
     const [elements, setElements] = useState([]);
