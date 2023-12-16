@@ -5,7 +5,6 @@ export const CanvasContext = createContext();
 export const CanvasProvider = ({ children }) => {
     const [elements, setElements] = useState([]);
     const [selectedId, setSelectedId] = useState(null);
-
     const [canvasWidth, setCanvasWidth] = useState(500);
     const [canvasHeight, setCanvasHeight] = useState(500);
 
@@ -37,7 +36,7 @@ export const CanvasProvider = ({ children }) => {
         setCanvasHeight,
         canvasWidth,
         setCanvasWidth
-    }), [elements, selectedId, addElement, updateElement, removeElement, canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight]);
+    }), [elements, selectedId, canvasWidth, canvasHeight]);
 
     return (
         <CanvasContext.Provider value={contextValue}>
