@@ -1,11 +1,20 @@
-import { useState } from 'react';
-import { Layer, Stage } from 'react-konva';
-import { TextBox } from './TextBox';
-import { Button } from './Button';
+import {useContext} from "react";
+import {CanvasContext} from "./CanvasProvider.jsx";
+import {Layer, Stage} from 'react-konva';
+import {TextBox} from "./DrawerElements/TextBox.jsx";
+import {Button} from "./DrawerElements/Button.jsx";
 
 export const CanvasComponent = () => {
-    const [elements, setElements] = useState([]);
-    const [selectedId, setSelectedId] = useState(null);
+    const {
+        elements,
+        addElement,
+        updateElement,
+        setSelectedId,
+        selectedId,
+        canvasWidth,
+        canvasHeight
+    } = useContext(CanvasContext);
+
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -16,20 +25,26 @@ export const CanvasComponent = () => {
 
         if (itemType === "text") {
             const text = e.dataTransfer.getData("text/plain");
-            setElements([...elements, { type: 'text', x, y, text, fontSize: 20, draggable: true, id: `text-${elements.length}` }]);
+            addElement({
+                type: 'text',
+                x,
+                y,
+                text,
+                fontSize: 20,
+                draggable: true,
+                id: `text-${Date.now()}`
+            });
         } else if (itemType === "button") {
-            setElements([...elements, { type: 'button', x, y, text: 'Button', fontSize: 20, draggable: true, id: `button-${elements.length}` }]);
+            addElement({
+                type: 'button',
+                x,
+                y,
+                text: 'Button',
+                fontSize: 20,
+                draggable: true,
+                id: `button-${Date.now()}`
+            });
         }
-    };
-
-    const updateElement = (id, newProps) => {
-        const updatedElements = elements.map(el => {
-            if (el.id === id) {
-                return { ...el, ...newProps };
-            }
-            return el;
-        });
-        setElements(updatedElements);
     };
 
     const checkDeselect = (e) => {
@@ -47,15 +62,19 @@ export const CanvasComponent = () => {
              onDrop={handleDrop}
              onDragOver={(e) => e.preventDefault()}>
             <Stage
-                width={window.innerWidth / 1.5}
-                height={window.innerHeight / 2}
+                width={canvasWidth}
+                height={canvasHeight}
                 onMouseDown={checkDeselect}>
                 <Layer>
                     {elements.map((el) => {
                         if (el.type === 'text') {
-                            return <TextBox key={el.id} textProps={el} isSelected={el.id === selectedId} onSelect={() => setSelectedId(el.id)} onChange={(newAttrs) => updateElement(el.id, newAttrs)} />;
+                            return <TextBox key={el.id} textProps={el} isSelected={el.id === selectedId}
+                                            onSelect={() => setSelectedId(el.id)}
+                                            onChange={(newAttrs) => updateElement(el.id, newAttrs)}/>;
                         } else if (el.type === 'button') {
-                            return <Button key={el.id} buttonProps={el} isSelected={el.id === selectedId} onSelect={() => setSelectedId(el.id)} onChange={(newAttrs) => updateElement(el.id, newAttrs)} />;
+                            return <Button key={el.id} buttonProps={el} isSelected={el.id === selectedId}
+                                           onSelect={() => setSelectedId(el.id)}
+                                           onChange={(newAttrs) => updateElement(el.id, newAttrs)}/>;
                         }
                         return null;
                     })}
