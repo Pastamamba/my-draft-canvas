@@ -10,11 +10,10 @@ export const CanvasComponent = () => {
         addElement,
         updateElement,
         setSelectedId,
-        selectedId,
         canvasWidth,
+        selectedId,
         canvasHeight
     } = useContext(CanvasContext);
-
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -68,12 +67,14 @@ export const CanvasComponent = () => {
                 <Layer>
                     {elements.map((el) => {
                         if (el.type === 'text') {
-                            return <TextBox key={el.id} textProps={el} isSelected={el.id === selectedId}
+                            return <TextBox key={el.id} textProps={el}
                                             onSelect={() => setSelectedId(el.id)}
+                                            isSelected={selectedId === el.id}
                                             onChange={(newAttrs) => updateElement(el.id, newAttrs)}/>;
                         } else if (el.type === 'button') {
-                            return <Button key={el.id} buttonProps={el} isSelected={el.id === selectedId}
+                            return <Button key={el.id} buttonProps={el}
                                            onSelect={() => setSelectedId(el.id)}
+                                           isSelected={selectedId === el.id}
                                            onChange={(newAttrs) => updateElement(el.id, newAttrs)}/>;
                         }
                         return null;

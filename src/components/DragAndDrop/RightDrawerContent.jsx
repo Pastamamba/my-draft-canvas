@@ -29,8 +29,10 @@ export const RightDrawerContent = () => {
     const selectedElement = elements.find(el => el.id === selectedId);
 
     const handleElementChange = (prop) => (event) => {
+        const val = prop === "text" ? event.target.value : parseInt(event.target.value)
+
         if (selectedElement) {
-            updateElement(selectedElement.id, {...selectedElement, [prop]: parseInt(event.target.value)});
+            updateElement(selectedElement.id, {...selectedElement, [prop]: val});
         }
     };
 

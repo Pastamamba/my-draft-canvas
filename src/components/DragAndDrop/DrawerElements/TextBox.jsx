@@ -1,18 +1,13 @@
-import {useState, useRef, useEffect} from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Text, Transformer } from 'react-konva';
 import { Html } from 'react-konva-utils';
 
-// TextBox component: Used for displaying and editing text elements on the canvas.
 export const TextBox = ({ textProps, isSelected, onSelect, onChange }) => {
-    // Refs for the text and transformer components.
     const shapeRef = useRef();
     const trRef = useRef();
-
-    // State for managing edit mode and the text value.
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(textProps.text);
 
-    // Effect hook to update the transformer when an element is selected.
     useEffect(() => {
         if (isSelected && shapeRef.current) {
             trRef.current.nodes([shapeRef.current]);
@@ -20,20 +15,31 @@ export const TextBox = ({ textProps, isSelected, onSelect, onChange }) => {
         }
     }, [isSelected]);
 
-    // Function to enable edit mode on double click.
     const handleDoubleClick = () => {
         setIsEditing(true);
     };
 
-    // Function to handle text changes in edit mode.
     const handleInputChange = (e) => {
         setEditText(e.target.value);
     };
 
-    // Function to apply changes and exit edit mode.
     const handleInputBlur = () => {
         setIsEditing(false);
         onChange({ ...textProps, text: editText });
+    };
+
+    const handleTransformEnd = () => {
+        const node = shapeRef.current;
+        const newAttrs = {
+            x: node.x(),
+            y: node.y(),
+            width: node.width() * node.scaleX(),
+            height: node.height() * node.scaleY(),
+            rotation: node.rotation()
+        };
+        node.scaleX(1);
+        node.scaleY(1);
+        onChange({ ...textProps, ...newAttrs });
     };
 
     return (
@@ -44,15 +50,20 @@ export const TextBox = ({ textProps, isSelected, onSelect, onChange }) => {
                 ref={shapeRef}
                 {...textProps}
                 draggable
+                onDragEnd={(e) => onChange({ ...textProps, x: e.target.x(), y: e.target.y() })}
+                onTransformEnd={handleTransformEnd}
                 visible={!isEditing}
             />
             {isSelected && (
                 <Transformer
                     ref={trRef}
+                    boundBoxFunc={(oldBox, newBox) => {
+                        // Rajoitukset transformaatiolle
+                        return newBox;
+                    }}
                 />
             )}
             {isEditing && (
-                // HTML wrapper for the text area to enable editing.
                 <Html
                     divProps={{
                         style: {

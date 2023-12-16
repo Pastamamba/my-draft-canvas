@@ -4,13 +4,26 @@ import { Rect, Text, Group, Transformer } from 'react-konva';
 export const Button = ({ buttonProps, isSelected, onSelect, onChange }) => {
     const shapeRef = useRef();
     const trRef = useRef();
-
     useEffect(() => {
         if (isSelected && shapeRef.current) {
             trRef.current.nodes([shapeRef.current]);
             trRef.current.getLayer().batchDraw();
         }
     }, [isSelected]);
+
+    const handleTransformEnd = () => {
+        const node = shapeRef.current;
+        const newAttrs = {
+            x: node.x(),
+            y: node.y(),
+            width: node.width() * node.scaleX(),
+            height: node.height() * node.scaleY(),
+            rotation: node.rotation()
+        };
+        node.scaleX(1);
+        node.scaleY(1);
+        onChange({ ...buttonProps, ...newAttrs });
+    };
 
     return (
         <React.Fragment>
@@ -20,26 +33,8 @@ export const Button = ({ buttonProps, isSelected, onSelect, onChange }) => {
                 x={buttonProps.x}
                 y={buttonProps.y}
                 draggable
-                onDragEnd={(e) => {
-                    onChange({ ...buttonProps, x: e.target.x(), y: e.target.y() });
-                }}
-                onTransformEnd={(e) => {
-                    const node = shapeRef.current;
-                    const scaleX = node.scaleX();
-                    const scaleY = node.scaleY();
-
-                    node.scaleX(1);
-                    node.scaleY(1);
-
-                    onChange({
-                        ...buttonProps,
-                        x: node.x(),
-                        y: node.y(),
-                        width: node.width() * scaleX,
-                        height: node.height() * scaleY,
-                        rotation: node.rotation(),
-                    });
-                }}
+                onDragEnd={(e) => onChange({ ...buttonProps, x: e.target.x(), y: e.target.y() })}
+                onTransformEnd={handleTransformEnd}
             >
                 <Rect
                     width={100}
@@ -61,7 +56,7 @@ export const Button = ({ buttonProps, isSelected, onSelect, onChange }) => {
                 <Transformer
                     ref={trRef}
                     rotateEnabled={true}
-                    keepRatio={true}
+                    keepRatio={false}
                 />
             )}
         </React.Fragment>
