@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
-import { CanvasContext } from "./CanvasProvider.jsx";
-import { Layer, Stage } from 'react-konva';
-import { TextBox } from "./DrawerElements/TextBox.jsx";
-import { Button as KonvaButton } from "./DrawerElements/Button.jsx";
-import { ZoomControls } from "./ZoomControls.jsx";
+import {useContext, useState} from "react";
+import {CanvasContext} from "./CanvasProvider.jsx";
+import {Layer, Stage} from 'react-konva';
+import {TextBox} from "./DrawerElements/TextBox.jsx";
+import {Button as KonvaButton} from "./DrawerElements/Button.jsx";
+import {ZoomControls} from "./ZoomControls.jsx";
 
 export const CanvasComponent = () => {
     const {
@@ -70,7 +70,7 @@ export const CanvasComponent = () => {
         const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
         setScale(newScale);
 
-        stage.scale({ x: newScale, y: newScale });
+        stage.scale({x: newScale, y: newScale});
 
         const newPos = {
             x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
@@ -96,7 +96,7 @@ export const CanvasComponent = () => {
         }}
              onDrop={handleDrop}
              onDragOver={(e) => e.preventDefault()}>
-            <ZoomControls zoomIn={zoomIn} zoomOut={zoomOut} />
+            <ZoomControls zoomIn={zoomIn} zoomOut={zoomOut}/>
             <Stage
                 width={canvasWidth}
                 height={canvasHeight}
@@ -104,7 +104,7 @@ export const CanvasComponent = () => {
                 scaleX={scale}
                 scaleY={scale}
                 onWheel={handleWheel}
-                draggable>
+            >
                 <Layer>
                     {elements.map((el) => {
                         if (el.type === 'text') {

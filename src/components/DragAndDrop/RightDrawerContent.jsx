@@ -1,16 +1,16 @@
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {CanvasContext} from "./CanvasProvider.jsx";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 
 export const RightDrawerContent = () => {
 
+    const [isTextIdInvalid, setIsTextIdInvalid] = useState(false);
+
+
     const {
         elements,
-        addElement,
         updateElement,
-        setSelectedId,
         selectedId,
         canvasWidth,
         canvasHeight,
@@ -28,11 +28,22 @@ export const RightDrawerContent = () => {
 
     const selectedElement = elements.find(el => el.id === selectedId);
 
-    const handleElementChange = (prop) => (event) => {
-        const val = prop === "text" ? event.target.value : parseInt(event.target.value)
+    const validateTextId = (textId) => {
+        const regex = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+        return regex.test(textId);
+    };
 
+    const handleElementChange = (prop) => (event) => {
+        const val = event.target.value;
         if (selectedElement) {
-            updateElement(selectedElement.id, {...selectedElement, [prop]: val});
+            if (prop === "text_id") {
+                if (validateTextId(val) || val === '') {
+                    updateElement(selectedElement.id, {...selectedElement, text_id: val});
+                    setIsTextIdInvalid(false);
+                } else {
+                    setIsTextIdInvalid(true);
+                }
+            }
         }
     };
 
@@ -59,11 +70,19 @@ export const RightDrawerContent = () => {
                 </>
             ) : (
                 <>
-                    <Typography sx={{fontSize: "12px"}}>Selected Item: {selectedId}</Typography>
+                    <TextField
+                        label="Id"
+                        value={selectedElement?.text_id || ''}
+                        onChange={handleElementChange("text_id")}
+                        error={isTextIdInvalid}
+                        helperText={isTextIdInvalid ? "Invalid format: Must start with a letter and contain only letters, numbers, or underscores." : ""}
+                        margin="normal"
+                        fullWidth
+                    />
                     <TextField
                         label="Text"
                         value={selectedElement?.text || ''}
-                        onChange={handleElementChange('text')}
+                        disabled={true}
                         margin="normal"
                         fullWidth
                     />
@@ -71,6 +90,7 @@ export const RightDrawerContent = () => {
                         label="Font Size"
                         type="number"
                         value={selectedElement?.fontSize || 20}
+                        disabled={true}
                         onChange={handleElementChange('fontSize')}
                         margin="normal"
                         fullWidth
@@ -79,6 +99,7 @@ export const RightDrawerContent = () => {
                         label="X Position"
                         type="number"
                         value={selectedElement?.x || 0}
+                        disabled={true}
                         onChange={handleElementChange('x')}
                         margin="normal"
                         fullWidth
@@ -87,6 +108,7 @@ export const RightDrawerContent = () => {
                         label="Y Position"
                         type="number"
                         value={selectedElement?.y || 0}
+                        disabled={true}
                         onChange={handleElementChange('y')}
                         margin="normal"
                         fullWidth
